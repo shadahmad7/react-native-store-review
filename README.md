@@ -1,37 +1,51 @@
-@shadahmad7/react-native-store-review
+# **@shadahmad7/react-native-store-review**
 
-A lightweight, fully native In-App Store Review TurboModule for React Native CLI apps, supporting both iOS & Android. This module allows apps to request the system-native review popup, without redirecting users out of the app, and without depending on Expo.
+A lightweight, fully-native **In-App Store Review TurboModule** for React Native CLI apps.
 
-⚡ Native Objective-C + Kotlin implementation
-🔒 Safe: The system decides when to show the dialog
-📦 Zero UI — always native look, no custom dialogs to maintain
+This module lets you trigger the **native rating popup** without sending users outside the app — and without using Expo.
 
-Features
+⚡ **TurboModule + Native (Obj-C + Kotlin)**
 
-Fully native TurboModule (New Architecture ready)
+📱 **iOS & Android Support**
 
-Works on both iOS & Android
+🔒 **System-controlled & Safe**
 
-Doesn’t force users to leave the app
+🎯 **Zero UI Maintenance — Always native look**
 
-Uses official store APIs
+---
 
-iOS: SKStoreReviewController / AppStore.requestReview
+## 🚀 Features
 
-Android: Google Play In-App Review API
+- Fully native TurboModule (supports **New Architecture**)
+- Works on both **iOS & Android**
+- **Does not redirect** users to the App Store/Play Store
+- Uses **official native APIs**
+    - iOS: `SKStoreReviewController`
+    - Android: **Google Play In-App Review API**
+- Automatic availability handling — shows **only when allowed**
+- System decides when to display the dialog (no spam risk)
 
-Auto-handles system restrictions and availability
+---
 
-Safe: System decides if/when to show the dialog
+## 📦 Installation
 
-Installation
-Using npm
+```bash
 npm install @shadahmad7/react-native-store-review
 
-Using Yarn
+```
+
+or
+
+```bash
 yarn add @shadahmad7/react-native-store-review
 
-Usage
+```
+
+---
+
+## 💻 Usage
+
+```tsx
 import StoreReview from "@shadahmad7/react-native-store-review";
 
 async function askForReview() {
@@ -41,83 +55,87 @@ async function askForReview() {
   await StoreReview.requestReview();
 }
 
+```
 
-💡 Tip: Only call after meaningful user actions (e.g., purchase, level completion, booking successful, etc.)
+💡 **Tip:** Only call after meaningful user actions
 
-Platform Notes
-📱 iOS
+(e.g., successful payment, booking, completed level, etc.)
 
-Works only on real devices (not on Simulator).
+---
 
-iOS decides whether the dialog is shown.
+## 📌 Platform Notes
 
-Won’t show for:
+### 📱 iOS
 
-TestFlight builds
+- Works only on **real devices**
+- Apple decides whether to show the popup
+- It may **not appear** on:
+    - Debug builds
+    - TestFlight builds
+    - Xcode installed builds
 
-Debug builds
+### 🤖 Android
 
-Xcode installs
+- Requires **Google Play Store + Play Services**
+- Dialog may not show on:
+    - Devices without Play Store (Huawei, AOSP)
+    - Sideloaded APKs
+    - Debug builds
+    - If shown too frequently
 
-🤖 Android
+---
 
-Requires Google Play Store + Play Services.
+## 📚 API
 
-May not show dialog on:
+### `isAvailableAsync(): Promise<boolean>`
 
-No Play Store (Huawei, AOSP phones)
+Checks if the device allows triggering the review dialog.
 
-APK sideloads
-
-Debug builds
-
-Too frequent requests
-
-API
-isAvailableAsync()
-
-Checks whether the review dialog is allowed to be triggered on the device.
-
+```tsx
 const canRequest = await StoreReview.isAvailableAsync();
 
+```
 
-Returns:
+### `requestReview(): Promise<void>`
 
-Promise<boolean>
+Requests the in-app review popup.
 
-requestReview()
-
-Requests the native in-app review popup.
-
+```tsx
 await StoreReview.requestReview();
 
+```
 
-Returns:
+⚠️ **Note:** The system may choose not to show anything even if the promise resolves.
 
-Promise<void>
+---
 
+## 🎯 Best Practices
 
-⚠️ Note: The system may decide to show nothing, even if the request succeeds.
+✔ Trigger only after **positive/milestone actions**
 
-Best Practices
+✔ Never show a custom popup asking for rating first
 
-✔ Call only after positive user actions
-✔ Do not show a custom prompt asking for rating
-✔ Do not spam or force requests
-✔ Call once after a user-defined checkpoint
+✔ **Do not spam calls**
 
-FAQ
+✔ Call **once at defined checkpoints**
 
-🔹 Can I detect if the dialog actually appeared?
-No. Apple and Google intentionally hide that.
+---
 
-🔹 Can I customize how it looks?
-No. It is 100% native.
+## ❓ FAQ
 
-🔹 What if I want to redirect users to the store page?
-Use a fallback: open the app’s store page if unavailable.
+### 🔹 Can I detect if the popup actually appeared?
 
-Fallback Example
+No. Apple and Google do not reveal that information.
+
+### 🔹 Can I customize the UI?
+
+No. The system controls the UI.
+
+### 🔹 How do I open the store page manually?
+
+Use a **fallback** when unavailable:
+
+```tsx
 import { Linking, Platform } from "react-native";
 import StoreReview from "@shadahmad7/react-native-store-review";
 
@@ -125,7 +143,6 @@ async function requestRating() {
   const ok = await StoreReview.isAvailableAsync();
   if (ok) return StoreReview.requestReview();
 
-  // Fallback: open store page
   if (Platform.OS === "ios") {
     Linking.openURL("https://apps.apple.com/app/idYOUR_APP_ID");
   } else {
@@ -133,6 +150,10 @@ async function requestRating() {
   }
 }
 
-License
+```
 
-MIT © @shadahmad7
+---
+
+## 📄 License
+
+**MIT © @shadahmad7**
