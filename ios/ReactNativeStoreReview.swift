@@ -41,9 +41,11 @@ class ReactNativeStoreReview: NSObject {
       }
 
       if #available(iOS 16.0, *) {
-        AppStore.requestReview(in: scene)
+          AppStore.requestReview(in: scene)
+      } else if #available(iOS 14.0, *) {
+          SKStoreReviewController.requestReview(in: scene)
       } else {
-        SKStoreReviewController.requestReview(in: scene)
+          SKStoreReviewController.requestReview()
       }
 
       safeResolve(nil)
